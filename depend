@@ -1,0 +1,5 @@
+runo_module.o: runo_module.cxx runo_impl.hxx
+runo_string.o: runo_string.cxx runo_impl.hxx
+runo_runtime.o: runo_runtime.cxx runo_impl.hxx
+runo_type.o: runo_type.cxx runo_impl.hxx
+runo_adapter.o: runo_adapter.cxx runo_impl.hxx

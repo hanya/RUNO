@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta name="robots" content="noindex,nofollow">
+
+<title>RUNO/TypeMapping - MoinMoin DesktopEdition</title>
+<script type="text/javascript" src="/moin_static190/common/js/common.js"></script>
+
+<script type="text/javascript">
+<!-- // GUI edit link and i18n
+var gui_editor_link_href = "/RUNO/TypeMapping?action=edit&editor=gui";
+var gui_editor_link_text = "Edit (GUI)";
+//-->
+</script>
+
+<link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="/moin_static190/modernized/css/common.css">
+<link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="/moin_static190/modernized/css/print.css">
+
+<!-- css only for MS IE6/IE7 browsers -->
+<!--[if lt IE 8]>
+   <link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="/moin_static190/modernized/css/msie.css">
+<![endif]-->
+
+
+
+<link rel="alternate" type="application/wiki" title="Edit" href="/RUNO/TypeMapping?action=edit">
+
+<link rel="Start" href="/LanguageSetup">
+<link rel="Alternate" title="Wiki Markup" href="/RUNO/TypeMapping?action=raw">
+<link rel="Alternate" media="print" title="Print View" href="/RUNO/TypeMapping?action=print">
+<link rel="Up" href="/RUNO">
+<link rel="Search" href="/FindPage">
+<link rel="Index" href="/TitleIndex">
+<link rel="Glossary" href="/WordIndex">
+<link rel="Help" href="/HelpOnFormatting">
+</head>
+
+<body  lang="en" dir="ltr">
+<div id="page" lang="en" dir="ltr">
+
+<div dir="ltr" id="content" lang="en"><span class="anchor" id="top"></span>
+<span class="anchor" id="line-1"></span><p class="line867">
+<h1 id="RUNO_Type_Mapping">RUNO Type Mapping</h1>
+<span class="anchor" id="line-2"></span><span class="anchor" id="line-3"></span><div><table><tbody><tr>  <td><p class="line891"><strong>UNO</strong></td>
+  <td><p class="line891"><strong>Ruby</strong></td>
+  <td><p class="line891"><strong>Ruby Extension Type</strong></td>
+  <td><p class="line891"><strong>Ruby Extension Struct</strong></td>
+  <td><p class="line891"><strong>C++</strong></td>
+  <td><p class="line891"><strong>UNO Type Description</strong></td>
+</tr>
+<tr>  <td><span class="anchor" id="line-4"></span><p class="line862">void</td>
+  <td><p class="line862">NilClass</td>
+  <td><p class="line862">T_NIL</td>
+  <td><p class="line862">Qnil†</td>
+  <td><p class="line862">void</td>
+  <td><p class="line862">Empty type, used only as method return type and in any.</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-5"></span><p class="line862">boolean</td>
+  <td><p class="line862">True<tt class="backtick"></tt>Class, <br>
+False<tt class="backtick"></tt>Class</td>
+  <td><p class="line862">T_TRUE, T_FALSE</td>
+  <td><p class="line862">Qtrue†, Qfalse†</td>
+  <td><p class="line862">sal_Bool</td>
+  <td><p class="line862">Can be true or false.</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-6"></span><p class="line862">byte</td>
+  <td><p class="line862">Fixnum</td>
+  <td><p class="line862">T_FIXNUM</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862">sal_Int8</td>
+  <td><p class="line862">Signed 8-bit integer type (ranging from －128 to 127, inclusive).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-7"></span><p class="line862">short</td>
+  <td><p class="line862">Fixnum</td>
+  <td><p class="line862">T_FIXNUM</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862">sal_Int16</td>
+  <td><p class="line862">Signed 16-bit integer type (ranging from －32768 to 32767, inclusive).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-8"></span><p class="line862">unsigned short</td>
+  <td><p class="line862">Fixnum</td>
+  <td><p class="line862">T_FIXNUM</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862">sal_uInt16</td>
+  <td><p class="line862">Unsigned 16-bit integer type (deprecated).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-9"></span><p class="line862">long</td>
+  <td><p class="line862">Bignum</td>
+  <td><p class="line862">T_BIGNUM</td>
+  <td><p class="line862">RBignum</td>
+  <td><p class="line862">sal_Int32</td>
+  <td><p class="line862">Signed 32-bit integer type (ranging from －2147483648 to 2147483647, inclusive).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-10"></span><p class="line862">unsigned long</td>
+  <td><p class="line862">Bignum</td>
+  <td><p class="line862">T_BIGNUM</td>
+  <td><p class="line862">RBignum</td>
+  <td><p class="line862">sal_uInt32</td>
+  <td><p class="line862">Unsigned 32-bit integer type (deprecated).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-11"></span><p class="line862">hyper</td>
+  <td><p class="line862">Bignum</td>
+  <td><p class="line862">T_BIGNUM</td>
+  <td><p class="line862">RBignum</td>
+  <td><p class="line862">sal_Int64</td>
+  <td><p class="line862">Signed 64-bit integer type (ranging from －9223372036854775808 to 9223372036854775807, inclusive).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-12"></span><p class="line862">unsigned hyper</td>
+  <td><p class="line862">Bignum</td>
+  <td><p class="line862">T_BIGNUM</td>
+  <td><p class="line862">RBignum</td>
+  <td><p class="line862">sal_uInt64</td>
+  <td><p class="line862">Unsigned 64-bit integer type (deprecated).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-13"></span><p class="line862">float</td>
+  <td><p class="line862">Float</td>
+  <td><p class="line862">T_FLOAT</td>
+  <td><p class="line862">RFloat</td>
+  <td><p class="line862">float</td>
+  <td><p class="line862">IEC 60559 single precision floating point type.</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-14"></span><p class="line862">double</td>
+  <td><p class="line862">Float</td>
+  <td><p class="line862">T_FLOAT</td>
+  <td><p class="line862">RFloat</td>
+  <td><p class="line862">double</td>
+  <td><p class="line862">EC 60559 double precision floating point type.</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-15"></span><p class="line862">char</td>
+  <td><p class="line862">Runo::Char</td>
+  <td><p class="line862">T_STRING</td>
+  <td><p class="line862">RString</td>
+  <td><p class="line862">sal_Unicode</td>
+  <td><p class="line862">Represents individual Unicode characters (more precisely: individual UTF-16 code units).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-16"></span><p class="line862">string</td>
+  <td><p class="line862">String</td>
+  <td><p class="line862">T_STRING</td>
+  <td><p class="line862">RString</td>
+  <td><p class="line862">rtl::OUString</td>
+  <td><p class="line862">Represents Unicode strings (more precisely: strings of Unicode scalar values).</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-17"></span><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+<tr>  <td><span class="anchor" id="line-18"></span><p class="line862">type</td>
+  <td><p class="line862">Runo::Type</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862"> </td>
+  <td><p class="line862">com::sun::star<br>
+::uno::Type</td>
+  <td><p class="line862">Meta type that describes all UNO types.</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-19"></span><p class="line862">any</td>
+  <td><p class="line862">Runo::Any</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862"> </td>
+  <td><p class="line862">com::sun::star<br>
+::uno::Any</td>
+  <td><p class="line862">Special type that can represent values of all other types.</td>
+</tr>
+<tr>  <td><span class="anchor" id="line-20"></span><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+<tr>  <td><span class="anchor" id="line-21"></span><p class="line862">sequence</td>
+  <td><p class="line862">Array</td>
+  <td><p class="line862">T_ARRAY</td>
+  <td><p class="line862">RArray</td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+<tr>  <td><span class="anchor" id="line-22"></span><p class="line862">(byte)<br>
+sequence</td>
+  <td><p class="line862">ASCII-8BIT<br>
+Runo::<br>
+Byte<tt class="backtick"></tt><tt class="backtick"></tt>Sequence</td>
+  <td><p class="line862">T_STRING</td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+<tr>  <td><span class="anchor" id="line-23"></span><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+<tr>  <td><span class="anchor" id="line-24"></span><p class="line862">enum</td>
+  <td><p class="line862">Runo::Enum</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+<tr>  <td><span class="anchor" id="line-25"></span><p class="line862">struct</td>
+  <td><p class="line862">Runo::<br>
+Runo<tt class="backtick"></tt><tt class="backtick"></tt>Struct</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+<tr>  <td><span class="anchor" id="line-26"></span><p class="line862">exception</td>
+  <td><p class="line862">Runo::Com::Sun::<br>
+Star::Runo<tt class="backtick"></tt><tt class="backtick"></tt>Exception</td>
+  <td><p class="line862">-</td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+  <td><p class="line862"> </td>
+</tr>
+</tbody></table></div><span class="anchor" id="line-27"></span><span class="anchor" id="line-28"></span><ul><li>†They are not struct. <span class="anchor" id="line-29"></span></li></ul><span class="anchor" id="bottom"></span></div><p id="pageinfo" class="info" lang="en" dir="ltr">RUNO/TypeMapping  (last edited 2010-01-24 12:48:44 by <span title="??? @ localhost[127.0.0.1]">localhost</span>)</p>
+<div id="pagebottom"></div>
+</div>
+</body>
+</html>
+
