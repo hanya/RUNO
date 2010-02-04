@@ -231,8 +231,8 @@ runo_uno_require(VALUE self, VALUE name)
 						else
 							klass = rb_define_class_under(module, className, get_exception_class());
 						
-						//VALUE type_name = rb_str_new2(RSTRING_PTR(name));
-						//rb_define_const(klass, "TYPENAME", type_name);
+						VALUE type_name = rb_str_new2(RSTRING_PTR(name));
+						rb_define_const(klass, "TYPENAME", type_name);
 					}
 					return klass;
 				}
