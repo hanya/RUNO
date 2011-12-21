@@ -1,0 +1,6 @@
+*((< UNO components written in Ruby|URL:#label-0>))
+  *((< Dependencies|URL:#label-1>))
+  *((< Ruby instance|URL:#label-2>))
+  *((< Loading process of the components|URL:#label-3>))
+  *((< UNO component example|URL:#label-6>))
+  *((< How to register|URL:#label-7>))

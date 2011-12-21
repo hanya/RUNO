@@ -1,0 +1,52 @@
+
+require 'rake/clean'
+
+# This rake file generates table of contents for rd files.
+
+toc_dir = './toc'
+
+rd2 = 'rd2'
+
+RD_EXT = 'rd'
+TC_SUF = 'rb' # dummy
+HTML_EXT = 'html'
+
+rd_files = FileList["*.#{RD_EXT}"]
+rd_files.exclude 'index.rd'
+rd_files.exclude "*.#{TC_SUF}"
+
+tc_files = rd_files.ext("#{TC_SUF}")
+tc_files_to_clean = rd_files.pathmap("#{toc_dir}/%p")
+
+CLEAN.include tc_files_to_clean
+
+directory toc_dir
+
+
+rule ".#{TC_SUF}" => ".#{RD_EXT}" do |t|
+  if File.exist? t.source
+    headings = []
+    i = 0
+    IO.readlines(t.source).each do |line|
+      if line.start_with? '='
+        m = line.match(/^(=*)(.*)/)
+        if m
+          headings << "#{'  ' * (m[1].length - 1)}*((<#{m[2]}|URL:#label-#{i}>))"
+          # ((<UNO|URL:./runo.html>))
+          i += 1
+        end
+      elsif line.start_with? '---'
+        i += 1
+      end
+    end
+    toc_name = File.basename(t.name, TC_SUF)
+    open("#{toc_dir}/#{toc_name}#{RD_EXT}", 'w') do |f|
+      f.write headings.join("\n")
+      f.flush
+    end
+    sh "#{rd2} #{toc_dir}/#{toc_name}#{RD_EXT} > #{toc_dir}/#{toc_name}#{HTML_EXT}"
+  end
+end
+
+
+task :default => [toc_dir, *tc_files]

@@ -1,0 +1,16 @@
+
+Ruby-UNO bridge
+
+
+0.2.0
+* Change directory structure.
+* Changed to Rakefile to build.
+* Add the component loader for Ruby.
+* Add the script provider for Ruby.
+* stl/hash_map is changed to ruby/st.
+* Ruby 1.8.x is no longer supported.
+* Primitives of UNO defined in uno.rb are moved to runo.so.
+
+
+0.1.0
+* First version.

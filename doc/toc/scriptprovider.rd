@@ -1,0 +1,8 @@
+*((< Macro|URL:#label-0>))
+  *((< Ruby script provider|URL:#label-1>))
+  *((< Macro directory|URL:#label-2>))
+  *((< Execution of Macros|URL:#label-3>))
+    *((< XSCRIPTCONTEXT constant|URL:#label-4>))
+    *((< Return value|URL:#label-9>))
+  *((< Macro name and description|URL:#label-10>))
+  *((< Macro example|URL:#label-11>))
