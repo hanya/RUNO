@@ -29,6 +29,8 @@ For example, compilation procedure is like the following:
  > make site-install
 compilation is successfully finished, runo.so file is created.
 
+Current version has problem to link against ruby library on Windows 
+environment. I couldn't fix it, investication required.
 
 = Environment Variables
 
