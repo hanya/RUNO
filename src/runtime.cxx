@@ -142,7 +142,7 @@ void Runtime::initialize(const Reference< XComponentContext > &ctx) throw (Runti
 	}
 	gImpl->valid = true;
     
-    gImpl->map = st_init_table(&adapter_hash); // ToDo
+    gImpl->map = st_init_table(&adapter_hash);
     gImpl->getTypesID = rb_intern("getTypes");
 }
 
@@ -156,14 +156,17 @@ getTypes(const Runtime &runtime, VALUE *value)
 		rb_raise(rb_eArgError, "illegal argument does not support com.sun.star.lang.XTypeProvider interface");
 	VALUE types = rb_funcall(*value, runtime.getImpl()->getTypesID, 0);
 	
-	long size = RARRAY_LEN(types);
-	ret.realloc(size + 1);
-	for (long i = 0; i < size; i++)
+	const long size = RARRAY_LEN(types);
+	if (size > 0)
 	{
-		Any a = runtime.value_to_any(rb_ary_entry(types, i));
-		a >>= ret[i];
+		ret.realloc(size + 1);
+		for (long i = 0; i < size; i++)
+		{
+			Any a = runtime.value_to_any(rb_ary_entry(types, i));
+			a >>= ret[i];
+		}
+		ret[size] = getCppuType((Reference< com::sun::star::lang::XUnoTunnel > *)0);
 	}
-	ret[size] = getCppuType((Reference< com::sun::star::lang::XUnoTunnel > *)0);
 	return ret;
 }
 
@@ -531,6 +534,8 @@ Any Runtime::value_to_any(VALUE value) const
                     VALUE a = get_class(ADAPTED_OBJECTS);
                     rb_ary_push(a, value);
 				}
+				else
+					rb_raise(rb_eArgError, "value does not support any UNO interfaces");
 			}
 			if (mapped.is())
 			{
