@@ -41,18 +41,6 @@ Adapter::Adapter(const VALUE &obj, const Sequence< Type > &types)
 {
 }
 
-VALUE
-Adapter::getWrapped()
-{
-	return m_wrapped;
-}
-
-Sequence< Type >
-Adapter::getWrappedTypes()
-{
-	return m_types;
-}
-
 Adapter::~Adapter()
 {
 	Runtime runtime;

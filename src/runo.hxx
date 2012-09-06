@@ -184,8 +184,8 @@ public:
     virtual ~Adapter();
     
     static com::sun::star::uno::Sequence< sal_Int8 > getTunnelImpleId();
-    VALUE getWrapped();
-    com::sun::star::uno::Sequence< com::sun::star::uno::Type > getWrappedTypes();
+    VALUE getWrapped() const { return m_wrapped; };
+    com::sun::star::uno::Sequence< com::sun::star::uno::Type > getWrappedTypes() const { return m_types; };
     
     virtual com::sun::star::uno::Reference < com::sun::star::beans::XIntrospectionAccess > SAL_CALL getIntrospection() throw (com::sun::star::uno::RuntimeException);
     
