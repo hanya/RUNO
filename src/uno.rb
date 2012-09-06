@@ -71,12 +71,12 @@ module Uno
     def get_uno_types(klass)
       types = []
       klass.ancestors.each do |m|
-        if m.const_defined?(:UNO_TYPE_NAME)
-          c = m.const_get(:UNO_TYPE_NAME)
-          types << Uno::Type.new(c)
-        end
+        types << m.const_get(:UNO_TYPE_NAME) if m.const_defined?(:UNO_TYPE_NAME)
       end
       types.uniq!
+      types.map! do |name|
+        Uno::Type.new(name)
+      end
       return types
     end
   end
