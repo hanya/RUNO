@@ -527,6 +527,9 @@ Any Runtime::value_to_any(VALUE value) const
                     adapter = new Adapter(value, types);
 					mapped = getImpl()->xAdapterFactory->createAdapter(adapter, types);
                     st_add_direct(getImpl()->map, value, (st_data_t)adapter);
+                    // keep wrapped values to be lived by GC
+                    VALUE a = get_class(ADAPTED_OBJECTS);
+                    rb_ary_push(a, value);
 				}
 			}
 			if (mapped.is())

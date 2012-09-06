@@ -59,6 +59,8 @@ Adapter::~Adapter()
     Adapter *adapter = NULL;
     st_delete(runtime.getImpl()->map, &m_wrapped, (st_data_t *)adapter);
     adapter = NULL;
+    VALUE a = get_class(ADAPTED_OBJECTS);
+    rb_ary_delete(a, m_wrapped);
 }
 
 

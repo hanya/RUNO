@@ -99,6 +99,7 @@ void init_external_encoding(void);
 
 /* types.cxx */
 /* Get class from Ruby runtime. */
+VALUE get_class(const char *name);
 VALUE get_uno_module(void);
 VALUE get_proxy_class(void);
 VALUE get_enum_class(void);

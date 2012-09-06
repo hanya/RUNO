@@ -1260,6 +1260,9 @@ Init_runo(void)
 	XInterface = rb_define_module_under(Uno, "XInterface");
 	rb_define_const(XInterface, UNO_TYPE_NAME, rb_str_new("com.sun.star.uno.XInterface", 27));
 	
+	// keeps wrapped value by adapter
+	rb_define_const(Runo, ADAPTED_OBJECTS, rb_ary_new());
+	
 	init_external_encoding();
 }
 }
