@@ -498,11 +498,14 @@ Any Runtime::value_to_any(VALUE value) const
 			}
 			else if (rb_obj_is_kind_of(value, get_char_class()))
 			{
-				RunoInternal *runo;
-				Data_Get_Struct(value, RunoInternal, runo);
-				sal_Unicode c;
-				runo->wrapped >>= c;
-				a.setValue(&c, getCharCppuType());
+				RunoValue *ptr;
+				Data_Get_Struct(value, RunoValue, ptr);
+				if (ptr)
+				{
+					sal_Unicode c;
+					ptr->value >>= c;
+					a.setValue(&c, getCharCppuType());
+				}
 			}
 			break;
 		}
