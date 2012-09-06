@@ -253,7 +253,7 @@ runo_uno_require(VALUE self, VALUE name)
 				{
 					value = runtime.any_to_VALUE(constants[i]->getConstantValue());
 					rb_iv_set(klass, OUStringToOString(
-						constants[i]->getName().copy(nStart), RTL_TEXTENCODING_ASCII_US ), value);
+						constants[i]->getName().copy(nStart), RTL_TEXTENCODING_ASCII_US ).getStr(), value);
 				}
 				return klass;
 			}
