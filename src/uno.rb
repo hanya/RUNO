@@ -14,6 +14,7 @@
 #  KIND, either express or implied.  See the License for the
 #  specific language governing permissions and limitations
 #  under the License.
+require "runo"
 
 module Uno
   @@ctx = get_component_context # initialize runo internal
@@ -72,7 +73,7 @@ module Uno
       klass.ancestors.each do |m|
         if m.const_defined?(:UNO_TYPE_NAME)
           c = m.const_get(:UNO_TYPE_NAME)
-          types << Uno.get_type(c)
+          types << Uno::Type.new(c)
         end
       end
       types.uniq!

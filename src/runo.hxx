@@ -79,15 +79,20 @@ typedef struct
     com::sun::star::uno::Any wrapped;
 } RunoInternal;
 
+typedef struct
+{
+    com::sun::star::uno::Any value;
+} RunoValue;
+
 
 /* string.cxx */
-/* OUString <-> VALUE (String) conversion */
-VALUE oustring_to_rb_str(const ::rtl::OUString &str);
-::rtl::OUString rb_str_to_oustring(const VALUE &str);
+::rtl::OUString asciiVALUE2OUString(VALUE str);
+VALUE asciiOUString2VALUE(const ::rtl::OUString &str);
 
-::rtl::OUString ascii_rb_str_to_oustring(const VALUE &str);
-VALUE ascii_oustring_to_rb_str(const ::rtl::OUString &str);
-VALUE bytes_to_rb_str(const com::sun::star::uno::Sequence< sal_Int8 > &bytes);
+VALUE ustring2RString(const ::rtl::OUString &str);
+::rtl::OUString rbString2OUString(VALUE rbstr);
+
+VALUE bytes2VALUE(const com::sun::star::uno::Sequence< sal_Int8 > &bytes);
 
 void init_external_encoding(void);
 //void set_external_encoding(void);
@@ -107,14 +112,23 @@ VALUE get_interface_class(void);
 VALUE get_css_uno_exception_class(void);
 VALUE get_uno_error_class(void);
 
+VALUE find_interface(const com::sun::star::uno::Reference< com::sun::star::reflection::XTypeDescription > &xTd);
+
+VALUE new_runo_proxy(const com::sun::star::uno::Any &object, const com::sun::star::uno::Reference< com::sun::star::lang::XSingleServiceFactory > &xFactory, VALUE klass);
+VALUE new_runo_object(const com::sun::star::uno::Any &a, const com::sun::star::uno::Reference< com::sun::star::lang::XSingleServiceFactory > &xFactory);
+
+void set_runo_struct(const com::sun::star::uno::Any &object, const com::sun::star::uno::Reference< com::sun::star::lang::XSingleServiceFactory > &xFactory, VALUE &self);
+
 
 /* define module according to UNO module name. */
 VALUE create_module(const ::rtl::OUString &name);
 /* find struct or exception class, class is created if not found */
-VALUE find_class(const ::rtl::OUString &name);
+VALUE find_class(const ::rtl::OUString &name, typelib_TypeClass typeClass);
 
 VALUE runo_new_type(const rtl::OUString &typeName, const VALUE &type_class);
 VALUE runo_new_enum(const rtl::OUString &typeName, const rtl::OUString &value);
+
+void raise_rb_exception(const com::sun::star::uno::Any &a);
 
 rtl::OUString valueToOUString(const void *pVal, typelib_TypeDescriptionReference *pTypeRef);
 
@@ -152,14 +166,14 @@ public:
     
     VALUE any_to_VALUE(const com::sun::star::uno::Any &a) const throw (com::sun::star::uno::RuntimeException);
     com::sun::star::uno::Any value_to_any(VALUE value) const throw (com::sun::star::uno::RuntimeException);
-    com::sun::star::uno::Sequence< com::sun::star::uno::Type > getTypes(VALUE &value) const;
+    //com::sun::star::uno::Sequence< com::sun::star::uno::Type > getTypes(VALUE &value) const;
 };
 
 
 class RUNO_DLLEXPORT Adapter : public cppu::WeakImplHelper2 < com::sun::star::script::XInvocation, com::sun::star::lang::XUnoTunnel >
 {
-    VALUE mWrapped;
-    com::sun::star::uno::Sequence< com::sun::star::uno::Type > mTypes;
+    VALUE m_wrapped;
+    com::sun::star::uno::Sequence< com::sun::star::uno::Type > m_types;
     
     com::sun::star::uno::Sequence< sal_Int16 > getOutParamIndexes(const rtl::OUString &methodName);
     
@@ -168,7 +182,7 @@ public:
     
     virtual ~Adapter();
     
-    static com::sun::star::uno::Sequence< sal_Int8 > getUnoTunnelImplementationId();
+    static com::sun::star::uno::Sequence< sal_Int8 > getTunnelImpleId();
     VALUE getWrapped();
     com::sun::star::uno::Sequence< com::sun::star::uno::Type > getWrappedTypes();
     

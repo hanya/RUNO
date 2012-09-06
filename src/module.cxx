@@ -1,5 +1,5 @@
 
-#include "runo_impl.hxx"
+#include "runo.hxx"
 
 #include <cppuhelper/bootstrap.hxx>
 #include <osl/file.hxx>
@@ -232,7 +232,7 @@ runo_uno_require(VALUE self, VALUE name)
 							klass = rb_define_class_under(module, className, get_exception_class());
 						
 						VALUE type_name = rb_str_new2(RSTRING_PTR(name));
-						rb_define_const(klass, "TYPENAME", type_name);
+						rb_define_const(klass, UNO_TYPE_NAME, type_name);
 					}
 					return klass;
 				}
@@ -755,7 +755,7 @@ static VALUE
 runo_struct_initialize(int argc, VALUE *argv, VALUE self)
 {
 	VALUE klass, type_name;
-	ID id = rb_intern("TYPENAME");
+	ID id = rb_intern(UNO_TYPE_NAME);
 	klass = CLASS_OF(self);
 	if (!rb_const_defined(klass, id))
 		rb_raise(rb_eRuntimeError, "wrongly initialized class `%s', type_name is not specified", rb_obj_classname(klass));
@@ -820,7 +820,7 @@ runo_exception_initialize(VALUE self, VALUE message)
 {
 /*
 	VALUE klass, type_name;
-	ID id = rb_intern("TYPENAME");
+	ID id = rb_intern(UNO_TYPE_NAME);
 	klass = CLASS_OF(self);
 	if (!rb_const_defined(klass, id))
 		rb_raise(rb_eRuntimeError, "wrongly initialized class `%s', type_name is not specified", rb_obj_classname(klass));
@@ -1168,15 +1168,16 @@ Init_runo(void)
 {
 	VALUE Runo;
 	
-	Runo = rb_define_module("Runo");
+	Runo = rb_define_module("Uno");
 	
 	rb_define_module_function(Runo, "get_component_context", (VALUE(*)(...))runo_getComponentContext, 0);
 	rb_define_module_function(Runo, "system_path_to_file_url", (VALUE(*)(...))runo_getFileURLFromSystemPath, 1);
 	rb_define_module_function(Runo, "file_url_to_system_path", (VALUE(*)(...))runo_getSystemPathFromFileURL, 1);
 	rb_define_module_function(Runo, "absolutize", (VALUE(*)(...))runo_absolutize, 2);
 	rb_define_module_function(Runo, "uuid", (VALUE(*)(...))runo_create_uuid, 0);
+	rb_define_module_function(Runo, "require_uno", (VALUE(*)(...))runo_uno_multiple_require, -1);
 	rb_define_module_function(Runo, "uno_require", (VALUE(*)(...))runo_uno_multiple_require, -1);
-	rb_define_module_function(Runo, "invoke", (VALUE(*)(...))runo_invoke, 3);
+    rb_define_module_function(Runo, "invoke", (VALUE(*)(...))runo_invoke, 3);
 	
 	VALUE RunoProxy;
 	RunoProxy = rb_define_class_under(Runo, "RunoProxy", rb_cData);
@@ -1250,14 +1251,14 @@ Init_runo(void)
 	
 /*
 	VALUE RunoException2;
-	RunoException2 = rb_define_class_under(Runo, "Exception", rb_eStandardError);
+	RunoException2 = rb_define_class_under(Runo, "UnoException", rb_eStandardError);
 	rb_define_alloc_func(RunoException2, runo_struct_alloc);
 	rb_define_method(RunoException2, "initialize", (VALUE(*)(...))runo_exception2_initialize, 1);
 */
 	
 	VALUE XInterface;
 	XInterface = rb_define_module_under(Uno, "XInterface");
-	rb_define_const(XInterface, "TYPENAME", rb_str_new("com.sun.star.uno.XInterface", 27));
+	rb_define_const(XInterface, UNO_TYPE_NAME, rb_str_new("com.sun.star.uno.XInterface", 27));
 	
 	init_external_encoding();
 }

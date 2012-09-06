@@ -1,5 +1,5 @@
 
-#include "runo_impl.hxx"
+#include "runo.hxx"
 
 #include <osl/thread.h>
 #include <rtl/ustrbuf.hxx>
@@ -29,12 +29,12 @@ namespace runo
 VALUE
 get_module_class()
 {
-	return rb_const_get(rb_cObject, rb_intern("Runo"));
+	return rb_const_get(rb_cObject, rb_intern("Uno"));
 	ID id;
-	id = rb_intern("Runo");
+	id = rb_intern("Uno");
 	if (rb_const_defined(rb_cObject, id))
 		return rb_const_get(rb_cObject, id);
-	rb_raise(rb_eRuntimeError, "module undefined (Runo)");
+	rb_raise(rb_eRuntimeError, "module undefined (Uno)");
 }
 
 VALUE
@@ -94,23 +94,23 @@ get_interface_class()
 	VALUE module = get_module_class();
 	id = rb_intern("Com");
 	if (!rb_const_defined(module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com)");
 	VALUE com_module = rb_const_get(module, id);
 	id = rb_intern("Sun");
 	if (!rb_const_defined(com_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun)");
 	VALUE sun_module = rb_const_get(com_module, id);
 	id = rb_intern("Star");
 	if (!rb_const_defined(sun_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun::Star)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star)");
 	VALUE star_module = rb_const_get(sun_module, id);
 	id = rb_intern("Uno");
 	if (!rb_const_defined(star_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun::Star::Uno)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno)");
 	VALUE uno_module = rb_const_get(star_module, id);
 	id = rb_intern("XInterface");
 	if (!rb_const_defined(uno_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun::Star::Uno::XInterface)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno::XInterface)");
 	return rb_const_get(uno_module, id);
 }
 
@@ -127,23 +127,23 @@ get_exception_class()
 	VALUE module = get_module_class();
 	id = rb_intern("Com");
 	if (!rb_const_defined(module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com)");
 	VALUE com_module = rb_const_get(module, id);
 	id = rb_intern("Sun");
 	if (!rb_const_defined(com_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun)");
 	VALUE sun_module = rb_const_get(com_module, id);
 	id = rb_intern("Star");
 	if (!rb_const_defined(sun_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun::Star)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star)");
 	VALUE star_module = rb_const_get(sun_module, id);
 	id = rb_intern("Uno");
 	if (!rb_const_defined(star_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun::Star::Uno)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno)");
 	VALUE uno_module = rb_const_get(star_module, id);
 	id = rb_intern("Exception");
 	if (!rb_const_defined(uno_module, id))
-		rb_raise(rb_eRuntimeError, "unknown error (Runo::Com::Sun::Star::Uno::Exception)");
+		rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno::Exception)");
 	return rb_const_get(uno_module, id);
 }
 
@@ -209,7 +209,7 @@ set_runo_struct(const Any &object, const Reference< XSingleServiceFactory > &xFa
  * Create or get modules according to name.
  */
 VALUE
-create_module(const OUString name)
+create_module(const OUString &name)
 {
 	VALUE parent;
 	parent = get_module_class();
@@ -252,7 +252,7 @@ create_module(const OUString name)
  * Find and define class (for structs and exceptions) or module (for interfaces).
  */
 VALUE
-find_class(const OUString name, typelib_TypeClass typeClass)
+find_class(const OUString &name, typelib_TypeClass typeClass)
 {
 	ID id;
 	VALUE module;
@@ -286,7 +286,7 @@ find_class(const OUString name, typelib_TypeClass typeClass)
 	{
 		rb_raise(rb_eArgError, "unsupported type (%s)", className);
 	}
-	rb_define_const(klass, "TYPENAME", asciiOUString2VALUE(name));
+	rb_define_const(klass, UNO_TYPE_NAME, asciiOUString2VALUE(name));
 	return klass;
 }
 
@@ -295,7 +295,7 @@ find_class(const OUString name, typelib_TypeClass typeClass)
  * Define interface module.
  */
 VALUE
-find_interface(Reference< XTypeDescription > &xTd)
+find_interface(const Reference< XTypeDescription > &xTd)
 {
 	OUString name = xTd->getName();
 	
@@ -337,7 +337,7 @@ raise_rb_exception(const Any &a)
 		
 		klass = find_class(typeName, (typelib_TypeClass)a.getValueTypeClass());
 		
-		rb_raise(klass, OUStringToOString(e.Message, RTL_TEXTENCODING_ASCII_US).getStr());
+		rb_raise(klass, "%s", OUStringToOString(e.Message, RTL_TEXTENCODING_ASCII_US).getStr());
 	}
 	catch (com::sun::star::lang::IllegalArgumentException &e)
 	{

@@ -99,13 +99,13 @@ createInstanceWithContext(const Reference< XComponentContext > &ctx)
         VALUE argv = rb_ary_new2(3);
         buf.append(sysPath);
         buf.appendAscii("/runo.so");
-        rb_ary_store(argv, 0, runo::oustring_to_rb_str(buf.makeStringAndClear()));
+        rb_ary_store(argv, 0, runo::ustring2RString(buf.makeStringAndClear()));
         buf.append(sysPath);
         buf.appendAscii("/lib.rb");
-        rb_ary_store(argv, 1, runo::oustring_to_rb_str(buf.makeStringAndClear()));
+        rb_ary_store(argv, 1, runo::ustring2RString(buf.makeStringAndClear()));
         buf.append(sysPath);
         buf.appendAscii("/rubyloader.rb");
-        rb_ary_store(argv, 2, runo::oustring_to_rb_str(buf.makeStringAndClear()));
+        rb_ary_store(argv, 2, runo::ustring2RString(buf.makeStringAndClear()));
         int state;
         rb_protect((VALUE(*)(VALUE))load_modules, argv, &state);
         ruby_state = state; // 0 sucess

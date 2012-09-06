@@ -1,5 +1,5 @@
 
-#include "runo_impl.hxx"
+#include "runo.hxx"
 
 #include <cppuhelper/typeprovider.hxx>
 #include <rtl/ustrbuf.hxx>
@@ -55,10 +55,10 @@ Adapter::getWrappedTypes()
 
 Adapter::~Adapter()
 {
-	// Adapter is deleted by the adapter factory.
-	// remove from adapterMap
 	Runtime runtime;
-	runtime.getImpl()->adapterMap.erase(m_wrapped);
+    Adapter *adapter = NULL;
+    st_delete(runtime.getImpl()->map, &m_wrapped, (st_data_t *)adapter);
+    adapter = NULL;
 }
 
 
@@ -253,7 +253,7 @@ Adapter::hasProperty(const OUString &aName)
 static cppu::OImplementationId g_Id(sal_False);
 
 Sequence < sal_Int8 >
-Adapter::getTunnelImplId()
+Adapter::getTunnelImpleId()
 {
 	return g_Id.getImplementationId();
 }

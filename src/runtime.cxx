@@ -1,5 +1,5 @@
 
-#include "runo_impl.hxx"
+#include "runo.hxx"
 
 #include <osl/thread.h>
 #include <typelib/typedescription.hxx>
@@ -46,14 +46,35 @@ bool Runtime::isInitialized() throw (RuntimeException)
 
 Runtime::Runtime() throw (RuntimeException)
 {
-	impl = gImpl;
+	imple = gImpl;
 }
 
 
 Runtime::~Runtime()
 {
-	impl = NULL;
+	imple = NULL;
 }
+
+
+static int 
+valuecmp(const int a, const int b)
+{
+    return a != b;
+}
+
+
+static st_index_t 
+valuehash(const int n)
+{
+    return n;
+}
+
+
+static struct st_hash_type adapter_hash = {
+    (int(*)(...))valuecmp, 
+    (st_index_t(*)(...))valuehash
+};
+
 
 void Runtime::initialize(const Reference< XComponentContext > &ctx) throw (RuntimeException)
 {
@@ -120,6 +141,9 @@ void Runtime::initialize(const Reference< XComponentContext > &ctx) throw (Runti
 			OUString(RTL_CONSTASCII_USTRINGPARAM("runo: failed to get /singletons/com.sun.star.reflection.theTypeDescriptionManager.")), Reference< XInterface >());
 	}
 	gImpl->valid = true;
+    
+    gImpl->map = st_init_table(&adapter_hash); // ToDo
+    gImpl->getTypesID = rb_intern("getTypes");
 }
 
 
@@ -127,11 +151,10 @@ static Sequence< Type >
 getTypes(const Runtime &runtime, VALUE *value)
 {
 	Sequence< Type > ret;
-	ID id = rb_intern("getTypes");
 	
-	if (! rb_respond_to(*value, id))
+	if (! rb_respond_to(*value, runtime.getImpl()->getTypesID))
 		rb_raise(rb_eArgError, "illegal argument does not support com.sun.star.lang.XTypeProvider interface");
-	VALUE types = rb_funcall(*value, id, 0);
+	VALUE types = rb_funcall(*value, runtime.getImpl()->getTypesID, 0);
 	
 	long size = RARRAY_LEN(types);
 	ret.realloc(size + 1);
@@ -324,7 +347,8 @@ VALUE Runtime::any_to_VALUE(const Any &a) const throw (RuntimeException)
 /*
  * Convert Ruby VALUE to UNO Any.
  */
-Any Runtime::value_to_any(VALUE value) const
+Any Runtime::value_to_any(VALUE value) const 
+    throw (com::sun::star::uno::RuntimeException)
 {
 //printf("value_to_any: %s\n", rb_obj_classname(value));
 	Any a;
@@ -484,26 +508,25 @@ Any Runtime::value_to_any(VALUE value) const
 			Reference< XInterface > mapped;
 			Reference< XInvocation > adapted;
 			
-			AdapterMap::iterator it = impl->adapterMap.find(value);
-			if (it != impl->adapterMap.end())
+            Adapter *adapter = NULL;
+			int s = st_lookup(imple->map, value, (st_data_t *)&adapter);
+            
+            if (adapter != NULL)
 			{
-				adapted = it->second;
-			}
-			if (adapted.is())
-			{
+                adapted = com::sun::star::uno::WeakReference< XInvocation >(adapter);
 				Reference< com::sun::star::lang::XUnoTunnel > tunnel(adapted, UNO_QUERY);
-				Adapter *adapter = (Adapter *) sal::static_int_cast< sal_IntPtr >(tunnel->getSomething(Adapter::getTunnelImplId()));
-				
-				mapped = impl->xAdapterFactory->createAdapter(adapted, adapter->getWrappedTypes());
+				adapter = (Adapter *) sal::static_int_cast< sal_IntPtr >(tunnel->getSomething(Adapter::getTunnelImpleId()));
+                
+				mapped = imple->xAdapterFactory->createAdapter(adapted, adapter->getWrappedTypes());
 			}
 			else
 			{
 				Sequence< Type > types = getTypes(*this, &value);
 				if (types.getLength())
 				{
-					Adapter *adapter = new Adapter(value, types);
+                    adapter = new Adapter(value, types);
 					mapped = getImpl()->xAdapterFactory->createAdapter(adapter, types);
-					impl->adapterMap[value] = com::sun::star::uno::WeakReference< XInvocation >(adapter);
+                    st_add_direct(getImpl()->map, value, (st_data_t)adapter);
 				}
 			}
 			if (mapped.is())

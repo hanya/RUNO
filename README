@@ -12,7 +12,7 @@ Document Format) is better for the task.
 = How to Compile
 You need following things to compile:
 * OpenOffice.org and OpenOffice.org SDK (3.x?)
-* Ruby (> 1.8.7?) and its header
+* Ruby (> 1.9.?) and its header
 
 Package version is not well checked.
 

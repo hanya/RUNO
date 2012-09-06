@@ -40,7 +40,7 @@ base_path = ENV['OFFICE_BASE_PROGRAM_PATH']
 
 
 # Building environment
-c = Config::CONFIG
+c = RbConfig::CONFIG
 
 cc = c['CC']
 link = c['LDSHAREDXX']
@@ -132,11 +132,13 @@ ALL_SRCS = FileList["#{SRC_DIR}/*.cxx"]
 MODULE_SRCS = FileList["#{SRC_DIR}/module.cxx"]
 LOADER_SRCS = FileList["#{SRC_DIR}/loader.cxx"]
 LIB_SRCS = FileList["#{SRC_DIR}/*.cxx"] - MODULE_SRCS - LOADER_SRCS
+GEM_MODULE_SRCS = ALL_SRCS - LOADER_SRCS
 
 ALL_OBJS = ALL_SRCS.ext(OBJ_EXT)
 MODULE_OBJS = MODULE_SRCS.ext(OBJ_EXT)
 LOADER_OBJS = LOADER_SRCS.ext(OBJ_EXT)
 LIB_OBJS = LIB_SRCS.ext(OBJ_EXT)
+GEM_MODULE_OBJS = GEM_MODULE_SRCS.ext(OBJ_EXT)
 
 RD_DOCS = FileList["#{DOC_DIR}/*.rd"]
 HTML_DOCS = RD_DOCS.ext("html")
@@ -160,8 +162,9 @@ if host.include? 'linux'
   local_link_lib = "-L#{LIB_DIR}"
   lib = "-L#{c['libdir']}"
   
+  out_flag = "-o "
   coutflag = c['COUTFLAG']
-  optflags = "-O1"
+  optflags = "-O2"
   cflags = "-fPIC"
   debugflags = ""#c['debugflags']
   
@@ -355,9 +358,9 @@ file GEM_LIB_UNO_RB => [LIB_DIR] do |t|
 end
 
 desc "runo.so for RPC connection."
-file GEM_LIB_RUNO_MODULE => [LIB_UNO_DIR, *ALL_OBJS] do |t|
+file GEM_LIB_RUNO_MODULE => [LIB_UNO_DIR, *GEM_MODULE_OBJS] do |t|
   puts "building ./lib/uno/runo.so"
-  sh "#{link} #{out_flag}#{t.name} #{ALL_OBJS.join(' ')} " + 
+  sh "#{link} #{out_flag}#{t.name} #{GEM_MODULE_OBJS.join(' ')} " + 
     " #{LIB} #{module_ldflags} " + 
     " #{sdk_lib} #{ure_lib}" + 
     " #{sdk_libs} #{LIBRUBYARG} #{LIBS} "

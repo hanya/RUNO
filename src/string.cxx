@@ -1,5 +1,5 @@
 
-#include "runo_impl.hxx"
+#include "runo.hxx"
 
 #ifdef HAVE_RUBY_IO_H
 #include <ruby/io.h>
