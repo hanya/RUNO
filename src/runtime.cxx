@@ -312,6 +312,20 @@ VALUE Runtime::any_to_VALUE(const Any &a) const throw (RuntimeException)
 		}
 	case typelib_TypeClass_INTERFACE:
 		{
+			Reference< com::sun::star::lang::XUnoTunnel > xUnoTunnel;
+			a >>= xUnoTunnel;
+			if (xUnoTunnel.is())
+			{
+				sal_Int64 nAddr = xUnoTunnel->getSomething(Adapter::getTunnelImpleId());
+				if (nAddr)
+				{
+					Adapter *pAdapter = (Adapter *)sal::static_int_cast< sal_IntPtr >(nAddr);
+					if (pAdapter != NULL)
+					{
+						return pAdapter->getWrapped();
+					}
+				}
+			}
 			return new_runo_object(a, getImpl()->xInvocation);
 		}
 	case typelib_TypeClass_TYPE:
