@@ -20,7 +20,6 @@
 #include <com/sun/star/script/MemberType.hpp>
 #include <com/sun/star/uno/Type.hxx>
 
-using com::sun::star::beans::XMaterialHolder;
 using com::sun::star::lang::WrappedTargetException;
 using com::sun::star::reflection::XConstantsTypeDescription;
 using com::sun::star::reflection::XConstantTypeDescription;
@@ -28,14 +27,7 @@ using com::sun::star::reflection::XEnumTypeDescription;
 using com::sun::star::reflection::XIdlClass;
 using com::sun::star::reflection::XTypeDescription;
 using com::sun::star::script::InvocationInfo;
-using com::sun::star::script::MemberType;
 using com::sun::star::script::XInvocation2;
-using com::sun::star::uno::Any;
-using com::sun::star::uno::Reference;
-using com::sun::star::uno::Type;
-using com::sun::star::uno::TypeDescription;
-using com::sun::star::uno::XComponentContext;
-using com::sun::star::uno::UNO_QUERY;
 
 using namespace cppu;
 using namespace rtl;
