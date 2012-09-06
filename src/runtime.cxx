@@ -10,20 +10,10 @@
 using com::sun::star::script::XInvocationAdapterFactory2;
 using com::sun::star::beans::XIntrospection;
 using com::sun::star::beans::XMaterialHolder;
-using com::sun::star::container::XHierarchicalNameAccess;
 using com::sun::star::lang::XSingleServiceFactory;
-using com::sun::star::reflection::XEnumTypeDescription;
 using com::sun::star::reflection::XIdlReflection;
 using com::sun::star::script::XInvocation;
-using com::sun::star::script::XInvocation2;
 using com::sun::star::script::XTypeConverter;
-using com::sun::star::uno::Any;
-using com::sun::star::uno::Reference;
-using com::sun::star::uno::RuntimeException;
-using com::sun::star::uno::TypeClass;
-using com::sun::star::uno::TypeDescription;
-using com::sun::star::uno::XComponentContext;
-using com::sun::star::uno::UNO_QUERY;
 
 using rtl::OString;
 using rtl::OUString;

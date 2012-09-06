@@ -14,12 +14,7 @@ using com::sun::star::beans::UnknownPropertyException;
 using com::sun::star::beans::XIntrospectionAccess;
 using com::sun::star::beans::XMaterialHolder;
 using com::sun::star::lang::IllegalArgumentException;
-using com::sun::star::reflection::InvocationTargetException;
 using com::sun::star::script::CannotConvertException;
-using com::sun::star::uno::Any;
-using com::sun::star::uno::RuntimeException;
-using com::sun::star::uno::Sequence;
-using com::sun::star::uno::Type;
 
 using rtl::OUString;
 using rtl::OUStringBuffer;
