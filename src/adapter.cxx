@@ -112,8 +112,7 @@ Adapter::getOutParamIndexes(const OUString &methodName)
 	int i = 0;
 	for (i = 0; i < info.getLength(); i++)
 	{
-		if (info[i].aMode == ParamMode_OUT || 
-			info[i].aMode == ParamMode_INOUT)
+		if (info[i].aMode != ParamMode_IN)
 			out++;
 	}
 	if (out)
@@ -122,8 +121,7 @@ Adapter::getOutParamIndexes(const OUString &methodName)
 		ret.realloc(out);
 		for (i = 0; i < info.getLength(); i++)
 		{
-			if (info[i].aMode == ParamMode_OUT || 
-				info[i].aMode == ParamMode_INOUT)
+			if (info[i].aMode != ParamMode_IN)
 			{
 				ret[j] = i;
 				j++;
