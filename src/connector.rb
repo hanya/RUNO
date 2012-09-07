@@ -63,7 +63,7 @@ module Uno
     
     def self.connect(data=nil, bridge_name=nil)
       if data.kind_of?(String)
-        data = data[4, -1] if data.start_with?('uno:')
+        data = data[4..-1] if data.start_with?('uno:')
         description, protocol, object = data.split(';')
       elsif !data.kind_of?(Hash)
         data = {'type' => 'pipe', 'name' => 'rubypipe', 
