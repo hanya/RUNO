@@ -124,7 +124,7 @@ void set_runo_struct(const com::sun::star::uno::Any &object, const com::sun::sta
 /* define module according to UNO module name. */
 VALUE create_module(const ::rtl::OUString &name);
 /* find struct or exception class, class is created if not found */
-VALUE find_class(const ::rtl::OUString &name, typelib_TypeClass typeClass);
+VALUE find_class(const rtl::OUString &name, const typelib_TypeClass &typeClass);
 
 VALUE runo_new_type(const rtl::OUString &typeName, const VALUE &type_class);
 VALUE runo_new_enum(const rtl::OUString &typeName, const rtl::OUString &value);

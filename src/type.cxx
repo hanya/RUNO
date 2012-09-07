@@ -252,7 +252,7 @@ create_module(const OUString &name)
  * Find and define class (for structs and exceptions) or module (for interfaces).
  */
 VALUE
-find_class(const OUString &name, typelib_TypeClass typeClass)
+find_class(const OUString &name, const typelib_TypeClass &typeClass)
 {
 	ID id;
 	VALUE module;
