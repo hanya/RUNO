@@ -120,7 +120,7 @@ runo_create_uuid(VALUE self)
     }
     catch (RuntimeException &e)
     {
-        rb_raise(rb_eRuntimeError, "failed to create UUID.");
+        rb_raise(rb_eRuntimeError, "failed to create UUID.", NULL);
     }
     return ret;
 }
@@ -151,12 +151,12 @@ runo_getComponentContext(VALUE self)
             }
             catch (RuntimeException &e)
             {
-                rb_raise(rb_eTypeError, "wrong value in @runo_runtime variable.");
+                rb_raise(rb_eTypeError, "wrong value in @runo_runtime variable.", NULL);
             }
         }
         else
         {
-            rb_raise(rb_eRuntimeError, "failed to bootstrap.");
+            rb_raise(rb_eRuntimeError, "failed to bootstrap.", NULL);
         }
     }
     if (ctx.is()) {
@@ -546,7 +546,7 @@ runo_proxy_method_missing(int argc, VALUE *argv, VALUE self)
         
         return proxy_method_call(name_symbol, &args, self);
     }
-    rb_raise(rb_eRuntimeError, "unknown error");
+    rb_raise(rb_eRuntimeError, "unknown error", NULL);
     return Qnil;
 }
 
@@ -648,7 +648,7 @@ runo_proxy_inspect(VALUE self)
         buf.appendAscii(RTL_CONSTASCII_STRINGPARAM(">"));
         return ustring2RString(buf.makeStringAndClear());
     }
-    rb_raise(rb_eRuntimeError, "uninitializezd RunoProxy.");
+    rb_raise(rb_eRuntimeError, "uninitializezd RunoProxy.", NULL);
     return Qnil;
 }
 
@@ -693,7 +693,7 @@ runo_invoke(VALUE self, VALUE object, VALUE name, VALUE args)
     if (! (rb_obj_is_kind_of(object, get_proxy_class()) || 
             rb_obj_is_kind_of(object, get_struct_class()) || 
             rb_obj_is_kind_of(object, get_exception_class())) )
-        rb_raise(rb_eArgError, "invalid object for source to invoke the function");
+        rb_raise(rb_eArgError, "invalid object for source to invoke the function", NULL);
     
     Check_Type(name, T_STRING);
     Check_Type(args, T_ARRAY);
@@ -800,16 +800,46 @@ runo_struct_equal(VALUE self, VALUE object)
         return Qtrue;
     return Qfalse;
 }
-/*
+
 static VALUE
-runo_exception_alloc(VALUE klass)
+runo_exception_to_str(VALUE self)
 {
-    return Data_Wrap_Struct(klass, 0, runo_proxy_free, 0);
+    printf("runo_exception_to_s\n");
+    return rb_str_new2("foo");
 }
-*/
+
 static VALUE
-runo_exception_initialize(VALUE self, VALUE message)
+runo_exception_exception(int argc, VALUE *argv, VALUE self)
 {
+    printf("runo_exception_exception, %d\n", argc);
+    rb_p(self);
+    //rb_p(message);
+    
+    return self;
+}
+
+static VALUE
+runo_exception_initialize(int argc, VALUE *argv, VALUE self)
+{
+    VALUE klass, type_name;
+    ID id = rb_intern(UNO_TYPE_NAME);
+    klass = CLASS_OF(self);
+    if (!rb_const_defined(klass, id))
+        rb_raise(rb_eRuntimeError, "wrongly initialized class `%s', type_name is not specified!", rb_obj_classname(klass));
+    type_name = rb_const_get(klass, id);
+    
+    Runtime runtime;
+    Any aStruct;
+    OUString typeName = rbString2OUString(type_name);
+    Reference< XIdlClass > idlClass(runtime.getImpl()->xCoreReflection->forName(typeName), UNO_QUERY);
+    if (!idlClass.is())
+        rb_raise(rb_eRuntimeError, "unknown type name (%s)", RSTRING_PTR(type_name));
+    idlClass->createObject(aStruct);
+    
+    set_runo_struct(aStruct, runtime.getImpl()->xInvocation, self);
+    
+    printf("runo_exception_initialize, %d\n", argc);
+    //rb_p(args);
 /*
     VALUE klass, type_name;
     ID id = rb_intern(UNO_TYPE_NAME);
@@ -830,8 +860,9 @@ runo_exception_initialize(VALUE self, VALUE message)
     
     rb_iv_set(self, "mesg", message);
     rb_iv_set(self, "bt", Qnil);
-*/
+
     rb_call_super(1, &message);
+    */
     return self;
 }
 
@@ -966,7 +997,7 @@ runo_type_initialize(int argc, VALUE *argv, VALUE self)
         
         Check_Type(type_name, T_STRING);
         if (! CLASS_OF(type_class) == get_enum_class())
-            rb_raise(rb_eArgError, "Runo::Enum is desired for 2nd argument.");
+            rb_raise(rb_eArgError, "Runo::Enum is desired for 2nd argument.", NULL);
         
         RunoValue *value;
         Data_Get_Struct(type_class, RunoValue, value);
@@ -1107,7 +1138,7 @@ runo_any_initialize(VALUE self, VALUE type, VALUE value)
     }
     else
     {
-        rb_raise(rb_eArgError, "invalid type for type.");
+        rb_raise(rb_eArgError, "invalid type for type.", NULL);
     }
     rb_iv_set(self, "@value", value);
     
@@ -1234,12 +1265,15 @@ Init_runo(void)
     
     VALUE RunoException;
     RunoException = rb_define_class_under(Uno, "Exception", rb_eStandardError);
-    //rb_define_alloc_func(RunoException, runo_struct_alloc);
-    rb_define_method(RunoException, "initialize", (VALUE(*)(...))runo_exception_initialize, 1);
+    rb_define_alloc_func(RunoException, runo_struct_alloc);
+    rb_define_method(RunoException, "initialize", (VALUE(*)(...))runo_exception_initialize, -1);
     rb_define_method(RunoException, "method_missing", (VALUE(*)(...))runo_proxy_method_missing, -1);
     rb_define_method(RunoException, "==", (VALUE(*)(...))runo_struct_equal, 1);
-    //rb_define_method(RunoException, "uno_methods", (VALUE(*)(...))runo_uno_methods, 0);
+    rb_define_method(RunoException, "uno_methods", (VALUE(*)(...))runo_uno_methods, 0);
+    //rb_define_method(RunoException, "to_str", (VALUE(*)(...))runo_exception_to_str, 0);
+    rb_define_method(RunoException, "exception", (VALUE(*)(...))runo_exception_exception, -1);
     //rb_define_attr(RunoException, "uno", 1, 1);
+    rb_define_const(RunoException, UNO_TYPE_NAME, rb_str_new("com.sun.star.uno.Exception", 26));
     
 /*
     VALUE RunoException2;

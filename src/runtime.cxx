@@ -143,7 +143,7 @@ getTypes(const Runtime &runtime, VALUE *value)
     Sequence< Type > ret;
     
     if (! rb_respond_to(*value, runtime.getImpl()->getTypesID))
-        rb_raise(rb_eArgError, "illegal argument does not support com.sun.star.lang.XTypeProvider interface");
+        rb_raise(rb_eArgError, "illegal argument does not support com.sun.star.lang.XTypeProvider interface", NULL);
     VALUE types = rb_funcall(*value, runtime.getImpl()->getTypesID, 0);
     
     const long size = RARRAY_LEN(types);
@@ -542,7 +542,7 @@ Any Runtime::value_to_any(VALUE value) const
                     rb_ary_push(a, value);
                 }
                 else
-                    rb_raise(rb_eArgError, "value does not support any UNO interfaces");
+                    rb_raise(rb_eArgError, "value does not support any UNO interfaces", NULL);
             }
             if (mapped.is())
             {

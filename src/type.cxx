@@ -34,7 +34,7 @@ get_module_class()
     id = rb_intern("Uno");
     if (rb_const_defined(rb_cObject, id))
         return rb_const_get(rb_cObject, id);
-    rb_raise(rb_eRuntimeError, "module undefined (Uno)");
+    rb_raise(rb_eRuntimeError, "module undefined (Uno)", NULL);
 }
 
 VALUE
@@ -94,23 +94,23 @@ get_interface_class()
     VALUE module = get_module_class();
     id = rb_intern("Com");
     if (!rb_const_defined(module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com)", NULL);
     VALUE com_module = rb_const_get(module, id);
     id = rb_intern("Sun");
     if (!rb_const_defined(com_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun)", NULL);
     VALUE sun_module = rb_const_get(com_module, id);
     id = rb_intern("Star");
     if (!rb_const_defined(sun_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star)", NULL);
     VALUE star_module = rb_const_get(sun_module, id);
     id = rb_intern("Uno");
     if (!rb_const_defined(star_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno)", NULL);
     VALUE uno_module = rb_const_get(star_module, id);
     id = rb_intern("XInterface");
     if (!rb_const_defined(uno_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno::XInterface)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno::XInterface)", NULL);
     return rb_const_get(uno_module, id);
 }
 
@@ -127,23 +127,23 @@ get_exception_class()
     VALUE module = get_module_class();
     id = rb_intern("Com");
     if (!rb_const_defined(module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com)", NULL);
     VALUE com_module = rb_const_get(module, id);
     id = rb_intern("Sun");
     if (!rb_const_defined(com_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun)", NULL);
     VALUE sun_module = rb_const_get(com_module, id);
     id = rb_intern("Star");
     if (!rb_const_defined(sun_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star)", NULL);
     VALUE star_module = rb_const_get(sun_module, id);
     id = rb_intern("Uno");
     if (!rb_const_defined(star_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno)", NULL);
     VALUE uno_module = rb_const_get(star_module, id);
     id = rb_intern("Exception");
     if (!rb_const_defined(uno_module, id))
-        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno::Exception)");
+        rb_raise(rb_eRuntimeError, "unknown error (Uno::Com::Sun::Star::Uno::Exception)", NULL);
     return rb_const_get(uno_module, id);
 }
 
@@ -324,33 +324,34 @@ find_interface(const Reference< XTypeDescription > &xTd)
 void
 raise_rb_exception(const Any &a)
 {
+    bool error = 0;
+    VALUE ex;
     try
     {
         com::sun::star::uno::Exception e;
-        a >>= e;
-        
-        VALUE module, klass;
-        Runtime runtime;
-        
-        OUString typeName = a.getValueTypeName();
-        module = create_module(typeName);
-        
-        klass = find_class(typeName, (typelib_TypeClass)a.getValueTypeClass());
-        
-        rb_raise(klass, "%s", OUStringToOString(e.Message, RTL_TEXTENCODING_ASCII_US).getStr());
+        if (a >>= e)
+        {
+            Runtime runtime;
+            ex = runtime.any_to_VALUE(a);
+            error = 1;
+        }
+        else
+            throw RuntimeException(OUString(), Reference< XInterface >());
     }
     catch (com::sun::star::lang::IllegalArgumentException &e)
     {
-        rb_raise(rb_eRuntimeError, "illegal argument exception at exception conversion.");
+        rb_raise(rb_eRuntimeError, "illegal argument exception at exception conversion.", NULL);
     }
     catch (com::sun::star::script::CannotConvertException &e)
     {
-        rb_raise(rb_eRuntimeError, "error at exception conversion.");
+        rb_raise(rb_eRuntimeError, "error at exception conversion.", NULL);
     }
     catch (RuntimeException &e)
     {
-        rb_raise(rb_eRuntimeError, "runtime exception at exception conversion.");
+        rb_raise(rb_eRuntimeError, "runtime exception at exception conversion.", NULL);
     }
+    if (error)
+        rb_exc_raise(ex);
 }
 
 
