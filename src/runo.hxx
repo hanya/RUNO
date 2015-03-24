@@ -100,7 +100,6 @@ void init_external_encoding(void);
 /* types.cxx */
 /* Get class from Ruby runtime. */
 VALUE get_class(const char *name);
-VALUE get_uno_module(void);
 VALUE get_proxy_class(void);
 VALUE get_enum_class(void);
 VALUE get_type_class(void);
@@ -110,8 +109,6 @@ VALUE get_exception_class(void);
 VALUE get_any_class(void);
 VALUE get_bytes_class(void);
 VALUE get_interface_class(void);
-VALUE get_css_uno_exception_class(void);
-VALUE get_uno_error_class(void);
 
 VALUE find_interface(const com::sun::star::uno::Reference< com::sun::star::reflection::XTypeDescription > &xTd);
 
