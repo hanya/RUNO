@@ -6,7 +6,6 @@ rbString2OUString
 bytes2VALUE
 init_external_encoding
 get_class
-get_uno_module
 get_proxy_class
 get_enum_class
 get_type_class
@@ -16,8 +15,6 @@ get_exception_class
 get_any_class
 get_bytes_class
 get_interface_class
-get_css_uno_exception_class
-get_uno_error_class
 find_interface
 new_runo_proxy
 new_runo_object
