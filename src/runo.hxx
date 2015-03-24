@@ -126,12 +126,7 @@ VALUE create_module(const ::rtl::OUString &name);
 /* find struct or exception class, class is created if not found */
 VALUE find_class(const rtl::OUString &name, const typelib_TypeClass &typeClass);
 
-VALUE runo_new_type(const rtl::OUString &typeName, const VALUE &type_class);
-VALUE runo_new_enum(const rtl::OUString &typeName, const rtl::OUString &value);
-
 void raise_rb_exception(const com::sun::star::uno::Any &a);
-
-rtl::OUString valueToOUString(const void *pVal, typelib_TypeDescriptionReference *pTypeRef);
 
 
 /*
